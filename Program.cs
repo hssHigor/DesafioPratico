@@ -20,6 +20,8 @@ builder.Services.AddScoped<TransacaoRepository>();
 
 builder.Services.AddScoped<TransacaoService>();
 
+builder.Services.AddScoped<RelatorioService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
