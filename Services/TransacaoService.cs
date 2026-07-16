@@ -22,7 +22,8 @@ public class TransacaoService
 
     public async Task<TransacaoResponseDto> Criar(TransacaoCreateDto dto)
     {
-        // Verifica se a pessoa informada existe
+        // Valida se a pessoa informada na transação está cadastrada.
+        // O sistema não permite criar transações vinculadas a pessoas inexistentes.
         var pessoa = await _pessoaRepository.BuscarPorId(dto.PessoaId);
 
 
@@ -36,7 +37,7 @@ public class TransacaoService
 
         // Regra de negócio:
         // Pessoas menores de 18 anos só podem cadastrar despesas
-        // O Sistema bloqueia receitas para evitar que menores sejam
+        // O sistema bloqueia receitas para evitar que menores sejam
         // cadastrados como responsáveis por entradas financeiras.
         if (pessoa.Idade < 18 && dto.Tipo == TipoTransacao.Receita)
         {
@@ -45,7 +46,8 @@ public class TransacaoService
             );
         }
 
-
+        // Cria a entidade Transacao após todas as validações
+        // de regra de negócio serem aprovadas.
         var transacao = new Transacao
         {
             Descricao = dto.Descricao,

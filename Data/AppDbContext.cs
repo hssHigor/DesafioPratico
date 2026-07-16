@@ -18,6 +18,11 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Define o relacionamento entre Pessoa e Transacao.
+        // Uma pessoa pode possuir várias transações.
+        // Quando uma pessoa for removida, suas transações relacionadas
+        // também serão excluídas automaticamente através do Cascade Delete, 
+        // atendendo à regra de negocio do sistema.
         modelBuilder.Entity<Pessoa>()
             .HasMany(p => p.Transacoes)
             .WithOne(t => t.Pessoa)

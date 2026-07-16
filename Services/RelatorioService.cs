@@ -20,7 +20,7 @@ public class RelatorioService
     public async Task<RelatorioTotaisDto> GerarRelatorio()
     {
         // Busca todas as pessoas junto com suas transações para permitir
-        // o cálculo individual de receitas, despesas e saldo
+        // o cálculo individual de receitas, despesas e saldo.
         var pessoas = await _context.Pessoas
             .Include(p => p.Transacoes)
             .ToListAsync();
@@ -46,13 +46,17 @@ public class RelatorioService
                 Nome = pessoa.Nome,
                 TotalReceitas = receitas,
                 TotalDespesas = despesas,
+
+                // Saldo calculado conforme regra de negócio:
+                // receitas acumuladas menos despesas acumuladas
                 Saldo = receitas - despesas
             };
         })
         .ToList();
 
 
-
+        // Consolida os valores de todas as pessoas cadastradas,
+        // gerando o resumo financeiro geral do sistema.
         return new RelatorioTotaisDto
         {
             Pessoas = pessoasTotais,
