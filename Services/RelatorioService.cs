@@ -19,6 +19,8 @@ public class RelatorioService
 
     public async Task<RelatorioTotaisDto> GerarRelatorio()
     {
+        // Busca todas as pessoas junto com suas transações para permitir
+        // o cálculo individual de receitas, despesas e saldo
         var pessoas = await _context.Pessoas
             .Include(p => p.Transacoes)
             .ToListAsync();
@@ -27,11 +29,12 @@ public class RelatorioService
 
         var pessoasTotais = pessoas.Select(pessoa =>
         {
+            // Soma somente transações classificadas como receitas.
             var receitas = pessoa.Transacoes
                 .Where(t => t.Tipo == TipoTransacao.Receita)
                 .Sum(t => t.Valor);
 
-
+            // Soma somente transações classificadas como despesas.
             var despesas = pessoa.Transacoes
                 .Where(t => t.Tipo == TipoTransacao.Despesa)
                 .Sum(t => t.Valor);

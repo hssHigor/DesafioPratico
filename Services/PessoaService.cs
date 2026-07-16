@@ -17,6 +17,8 @@ public class PessoaService
 
     public async Task<PessoaResponseDto> Criar(PessoaCreateDto dto)
     {
+        // Cria uma nova entidade Pessoa a partir dos dados recebidos pelo DTO.
+        // O identificador é gerado automaticamento pelo banco de dados.
         var pessoa = new Pessoa
         {
             Nome = dto.Nome,
@@ -50,7 +52,9 @@ public class PessoaService
         if (pessoa == null)
             return false;
 
-
+        // A exclusão das transações vinculadas ocorre automaticamente
+        // através do relacionamento configurado no Entity Framework
+        // utilizando DeleteBehavior.Cascade.
         await _repository.Excluir(pessoa);
 
         return true;

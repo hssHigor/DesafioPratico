@@ -1,6 +1,7 @@
 using ControleGastos.Api.DTOs.Transacao;
 using ControleGastos.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using ControleGastos.Api.Exceptions;
 
 namespace ControleGastos.Api.Controllers;
 
@@ -26,7 +27,7 @@ public class TransacoesController : ControllerBase
 
             return Created("", transacao);
         }
-        catch (Exception ex)
+        catch (BusinessException ex)
         {
             return BadRequest(new
             {

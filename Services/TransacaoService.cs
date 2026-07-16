@@ -1,6 +1,7 @@
 using ControleGastos.Api.DTOs.Transacao;
 using ControleGastos.Api.Models;
 using ControleGastos.Api.Repositories;
+using ControleGastos.Api.Exceptions;
 
 namespace ControleGastos.Api.Services;
 
@@ -27,15 +28,19 @@ public class TransacaoService
 
         if (pessoa == null)
         {
-            throw new Exception("Pessoa não encontrada.");
+            throw new BusinessException(
+                "Pessoa não encontrada."
+            );
         }
 
 
         // Regra de negócio:
         // Pessoas menores de 18 anos só podem cadastrar despesas
+        // O Sistema bloqueia receitas para evitar que menores sejam
+        // cadastrados como responsáveis por entradas financeiras.
         if (pessoa.Idade < 18 && dto.Tipo == TipoTransacao.Receita)
         {
-            throw new Exception(
+            throw new BusinessException(
                 "Menores de idade não podem cadastrar receitas."
             );
         }
