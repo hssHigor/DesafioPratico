@@ -23,7 +23,7 @@ public class TransacoesController : ControllerBase
     {
         try
         {
-            var transacao = await _service.Criar(dto);
+            var transacao = await _service.Criar(dto);      
 
             return Created("", transacao);
         }
