@@ -85,6 +85,24 @@ O frontend foi organizado em:
 
 ---
 
+# 🧠 Lógica e fluxo do projeto
+
+A aplicação foi pensada para representar um fluxo simples de controle financeiro:
+
+1. O usuário cadastra pessoas no sistema;
+2. Em seguida, registra receitas ou despesas associadas a uma dessas pessoas;
+3. O backend calcula os totais por pessoa e o resumo geral;
+4. O frontend exibe esses resultados em uma interface organizada.
+
+A estrutura foi dividida em camadas para deixar a lógica clara:
+- o backend concentra as regras de negócio nos services;
+- os repositories cuidam da persistência no banco SQLite;
+- o frontend consome a API e apresenta os dados com feedback visual.
+
+Essa organização foi adotada para facilitar manutenção, entendimento e avaliação do desafio técnico.
+
+---
+
 # ✅ Funcionalidades
 
 ## Pessoas

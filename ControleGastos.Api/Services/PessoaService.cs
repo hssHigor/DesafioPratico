@@ -4,6 +4,9 @@ using ControleGastos.Api.Repositories;
 
 namespace ControleGastos.Api.Services;
 
+/// <summary>
+/// Serviço responsável por aplicar as regras de cadastro e consulta de pessoas.
+/// </summary>
 public class PessoaService
 {
     private readonly PessoaRepository _repository;
@@ -15,6 +18,7 @@ public class PessoaService
     }
 
 
+    // Cria uma entidade Pessoa a partir do DTO recebido e a persiste no banco.
     public async Task<PessoaResponseDto> Criar(PessoaCreateDto dto)
     {
         // Cria uma nova entidade Pessoa a partir dos dados recebidos pelo DTO.
@@ -33,6 +37,7 @@ public class PessoaService
     }
 
 
+    // Busca todas as pessoas cadastradas e converte os dados para o formato usado pela API.
     public async Task<List<PessoaResponseDto>> BuscarTodas()
     {
         var pessoas = await _repository.BuscarTodas();
@@ -44,6 +49,7 @@ public class PessoaService
     }
 
 
+    // Remove uma pessoa quando ela existe, respeitando o relacionamento com as transações.
     public async Task<bool> Excluir(int id)
     {
         var pessoa = await _repository.BuscarPorId(id);

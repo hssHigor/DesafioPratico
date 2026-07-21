@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace ControleGastos.Api.Controllers;
 
 
+/// <summary>
+/// Controller responsável por expor os endpoints de cadastro, listagem e exclusão de pessoas.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class PessoasController : ControllerBase
@@ -21,6 +24,7 @@ public class PessoasController : ControllerBase
 
 
 
+    // Recebe um novo cadastro de pessoa e retorna o recurso criado.
     [HttpPost]
     public async Task<IActionResult> Criar(PessoaCreateDto dto)
     {
@@ -34,6 +38,7 @@ public class PessoasController : ControllerBase
 
 
 
+    // Retorna todas as pessoas cadastradas para consumo pelo frontend.
     [HttpGet]
     public async Task<IActionResult> BuscarTodas()
     {
@@ -44,6 +49,7 @@ public class PessoasController : ControllerBase
 
 
 
+    // Remove uma pessoa pelo identificador, quando ela existir.
     [HttpDelete("{id}")]
     public async Task<IActionResult> Excluir(int id)
     {

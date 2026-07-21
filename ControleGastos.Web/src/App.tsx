@@ -4,6 +4,7 @@ import Pessoas from "./pages/Pessoas/Pessoas";
 import { Transacoes } from "./pages/Transacoes/Transacoes";
 import { Relatorio } from "./pages/Relatorio/Relatorio";
 
+// Componente principal que controla a navegação entre as telas do painel financeiro.
 function App() {
     const [pagina, setPagina] = useState("pessoas");
 

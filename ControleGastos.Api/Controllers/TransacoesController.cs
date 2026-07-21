@@ -5,6 +5,9 @@ using ControleGastos.Api.Exceptions;
 
 namespace ControleGastos.Api.Controllers;
 
+/// <summary>
+/// Controller responsável por registrar e listar transações financeiras ligadas a pessoas.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class TransacoesController : ControllerBase
@@ -18,6 +21,7 @@ public class TransacoesController : ControllerBase
     }
 
 
+    // Cria uma nova transação após validar as regras de negócio.
     [HttpPost]
     public async Task<IActionResult> Criar(TransacaoCreateDto dto)
     {
@@ -37,6 +41,7 @@ public class TransacoesController : ControllerBase
     }
 
 
+    // Retorna o histórico de transações para exibição no painel do frontend.
     [HttpGet]
     public async Task<IActionResult> BuscarTodas()
     {

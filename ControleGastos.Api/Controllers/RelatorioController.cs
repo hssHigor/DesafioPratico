@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ControleGastos.Api.Controllers;
 
+/// <summary>
+/// Controller responsável por fornecer um resumo financeiro consolidado para o frontend.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class RelatorioController : ControllerBase
@@ -16,6 +19,7 @@ public class RelatorioController : ControllerBase
     }
 
 
+    // Gera o relatório consolidado com receitas, despesas e saldo geral.
     [HttpGet("totais")]
     public async Task<IActionResult> BuscarTotais()
     {

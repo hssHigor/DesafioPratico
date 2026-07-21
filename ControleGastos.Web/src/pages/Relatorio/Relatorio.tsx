@@ -4,6 +4,7 @@ import type { RelatorioTotais } from "../../types/RelatorioTotais";
 
 import { formatarMoeda } from "../../utils/formatarMoeda";
 
+// Componente responsável por exibir os totais financeiros consolidados por pessoa e no geral.
 export function Relatorio() {
     const [relatorio, setRelatorio] = useState<RelatorioTotais | null>(null);
     const [carregando, setCarregando] = useState(true);

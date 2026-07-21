@@ -5,6 +5,9 @@ using ControleGastos.Api.Exceptions;
 
 namespace ControleGastos.Api.Services;
 
+/// <summary>
+/// Serviço responsável por validar e salvar transações financeiras, aplicando as regras de negócio.
+/// </summary>
 public class TransacaoService
 {
     private readonly TransacaoRepository _transacaoRepository;
@@ -20,6 +23,7 @@ public class TransacaoService
     }
 
 
+    // Cria uma transação somente se a pessoa informada existir e a regra de idade for respeitada.
     public async Task<TransacaoResponseDto> Criar(TransacaoCreateDto dto)
     {
         // Valida se a pessoa informada na transação está cadastrada.
@@ -65,6 +69,7 @@ public class TransacaoService
 
 
 
+    // Busca o histórico completo de transações para renderização no frontend.
     public async Task<List<TransacaoResponseDto>> BuscarTodas()
     {
         var transacoes = await _transacaoRepository.BuscarTodas();

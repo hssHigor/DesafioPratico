@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Api.Services;
 
+/// <summary>
+/// Serviço responsável por consolidar receitas, despesas e saldo em um relatório por pessoa e geral.
+/// </summary>
 public class RelatorioService
 {
     private readonly AppDbContext _context;
@@ -17,6 +20,7 @@ public class RelatorioService
 
 
 
+    // Agrupa as transações por pessoa e calcula os totais de receitas, despesas e saldo.
     public async Task<RelatorioTotaisDto> GerarRelatorio()
     {
         // Busca todas as pessoas junto com suas transações para permitir

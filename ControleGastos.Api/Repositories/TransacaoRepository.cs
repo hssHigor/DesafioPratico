@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Api.Repositories;
 
+/// <summary>
+/// Repositório responsável pela persistência das transações financeiras.
+/// </summary>
 public class TransacaoRepository
 {
     private readonly AppDbContext _context;

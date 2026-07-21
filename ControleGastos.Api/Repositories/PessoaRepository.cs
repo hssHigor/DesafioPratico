@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Api.Repositories;
 
+/// <summary>
+/// Repositório responsável por persistir e consultar os dados de Pessoa no banco SQLite.
+/// </summary>
 public class PessoaRepository
 {
     private readonly AppDbContext _context;

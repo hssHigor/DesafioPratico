@@ -2,6 +2,7 @@
 import type { Pessoa } from "../../types/Pessoa";
 import { listarPessoas, criarPessoa, excluirPessoa } from "../../services/pessoaService";
 
+// Componente responsável por cadastrar, listar e remover pessoas no painel.
 function Pessoas() {
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
   const [nome, setNome] = useState("");
@@ -10,6 +11,7 @@ function Pessoas() {
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
 
+  // Busca os dados no backend e atualiza a lista exibida na tela.
   async function carregarPessoas() {
     try {
       setCarregando(true);

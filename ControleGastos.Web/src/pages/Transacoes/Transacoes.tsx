@@ -8,6 +8,7 @@ import type { TransacaoCreate } from "../../types/TransacaoCreate";
 
 import { formatarMoeda } from "../../utils/formatarMoeda";
 
+// Componente responsável por cadastrar e listar receitas e despesas vinculadas a uma pessoa.
 export function Transacoes() {
     const [pessoas, setPessoas] = useState<Pessoa[]>([]);
     const [transacoes, setTransacoes] = useState<Transacao[]>([]);
@@ -19,6 +20,7 @@ export function Transacoes() {
     const [erro, setErro] = useState("");
     const [salvando, setSalvando] = useState(false);
 
+    // Carrega as pessoas cadastradas e o histórico de transações para preencher o formulário e a lista.
     async function carregarDados() {
         try {
             setCarregando(true);
