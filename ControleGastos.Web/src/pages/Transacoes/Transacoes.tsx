@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { listarTransacoes, criarTransacao } from "../../services/transacaoService";
 import { listarPessoas } from "../../services/pessoaService";
 
@@ -11,46 +11,52 @@ import { formatarMoeda } from "../../utils/formatarMoeda";
 export function Transacoes() {
     const [pessoas, setPessoas] = useState<Pessoa[]>([]);
     const [transacoes, setTransacoes] = useState<Transacao[]>([]);
-
     const [descricao, setDescricao] = useState("");
     const [valor, setValor] = useState<number | "">("");
     const [tipo, setTipo] = useState(1);
     const [pessoaId, setPessoaId] = useState(0);
-
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
+    const [salvando, setSalvando] = useState(false);
 
     async function carregarDados() {
-    try {
-        setCarregando(true);
-        setErro("");
+        try {
+            setCarregando(true);
+            setErro("");
 
-        const pessoasApi = await listarPessoas();
-        const transacoesApi = await listarTransacoes();
+            const pessoasApi = await listarPessoas();
+            const transacoesApi = await listarTransacoes();
 
-        setPessoas(pessoasApi);
-        setTransacoes(transacoesApi);
-    } catch (error) {
-        console.error(error);
-        setErro("Não foi possível carregar os dados.");
-    } finally {
-        setCarregando(false);
-    }
+            setPessoas(pessoasApi);
+            setTransacoes(transacoesApi);
+        } catch (error) {
+            console.error(error);
+            setErro("Nao foi possivel carregar os dados.");
+        } finally {
+            setCarregando(false);
+        }
     }
 
     useEffect(() => {
-        carregarDados();
+        void carregarDados();
     }, []);
 
     async function salvar() {
+        if (!descricao.trim() || valor === "" || valor <= 0 || pessoaId === 0) {
+            setErro("Preencha todos os campos antes de salvar.");
+            return;
+        }
+
         const novaTransacao: TransacaoCreate = {
-            descricao,
+            descricao: descricao.trim(),
             valor: Number(valor),
             tipo,
             pessoaId
         };
 
         try {
+            setSalvando(true);
+            setErro("");
             await criarTransacao(novaTransacao);
 
             setDescricao("");
@@ -58,85 +64,101 @@ export function Transacoes() {
             setTipo(1);
             setPessoaId(0);
 
-            carregarDados();
+            await carregarDados();
         } catch (error) {
             console.error(error);
-            alert("Não foi possível cadastrar a transação.");
+            setErro("Nao foi possivel cadastrar a transacao.");
+        } finally {
+            setSalvando(false);
         }
     }
 
     if (carregando) {
-        return <p>Carregando transações...</p>;
-    }
-
-    if (erro) {
-        return <p>{erro}</p>;
+        return <div className="state-card">Carregando transacoes...</div>;
     }
 
     return (
-        <>
-            <h2>Transações</h2>
+        <div className="page-section">
+            {erro && (
+                <div className="state-card">
+                    {erro}
+                </div>
+            )}
 
-            <div>
-                <input
-                    placeholder="Descrição"
-                    value={descricao}
-                    onChange={(e) => setDescricao(e.target.value)}
-                />
+            <section className="panel">
+                <div className="panel-header">
+                    <div>
+                        <p className="eyebrow">Movimentacao</p>
+                        <h2>Transacoes</h2>
+                    </div>
+                    <span className="pill">{transacoes.length} registradas</span>
+                </div>
 
-                <input
-                    type="number"
-                    placeholder="Valor"
-                    value={valor}
-                    onChange={(e) =>
-                        setValor(
-                            e.target.value === ""
-                                ? ""
-                                : Number(e.target.value)
-                        )
-    }
-/>
+                <div className="form-grid">
+                    <input
+                        className="input-field"
+                        placeholder="Descricao"
+                        value={descricao}
+                        onChange={(e) => setDescricao(e.target.value)}
+                    />
 
-                <select
-                    value={tipo}
-                    onChange={(e) => setTipo(Number(e.target.value))}
-                >
-                    <option value={1}>Receita</option>
-                    <option value={2}>Despesa</option>
-                </select>
+                    <input
+                        className="input-field"
+                        type="number"
+                        placeholder="Valor"
+                        value={valor}
+                        onChange={(e) =>
+                            setValor(e.target.value === "" ? "" : Number(e.target.value))
+                        }
+                    />
 
-                <select
-                    value={pessoaId}
-                    onChange={(e) => setPessoaId(Number(e.target.value))}
-                >
-                    <option value={0}>Selecione</option>
+                    <select className="select-field" value={tipo} onChange={(e) => setTipo(Number(e.target.value))}>
+                        <option value={1}>Receita</option>
+                        <option value={2}>Despesa</option>
+                    </select>
 
-                    {pessoas.map((pessoa) => (
-                        <option
-                            key={pessoa.id}
-                            value={pessoa.id}
-                        >
-                            {pessoa.nome}
-                        </option>
+                    <select className="select-field" value={pessoaId} onChange={(e) => setPessoaId(Number(e.target.value))}>
+                        <option value={0}>Selecione a pessoa</option>
+                        {pessoas.map((pessoa) => (
+                            <option key={pessoa.id} value={pessoa.id}>
+                                {pessoa.nome}
+                            </option>
+                        ))}
+                    </select>
+
+                    <button className="primary-btn" onClick={() => void salvar()} disabled={salvando}>
+                        {salvando ? "Salvando..." : "Salvar"}
+                    </button>
+                </div>
+            </section>
+
+            <section className="panel">
+                <div className="panel-header">
+                    <h3>Historico</h3>
+                </div>
+
+                <div className="card-list">
+                    {transacoes.map((transacao) => (
+                        <div key={transacao.id} className="transaction-card">
+                            <div className="transaction-info">
+                                <div className="avatar">
+                                    {transacao.tipo === 1 ? "+" : "-"}
+                                </div>
+                                <div>
+                                    <strong>{transacao.descricao}</strong>
+                                    <p>{transacao.tipo === 1 ? "Receita" : "Despesa"}</p>
+                                </div>
+                            </div>
+
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
+                                <span className={`tag ${transacao.tipo === 1 ? "tag-income" : "tag-expense"}`}>
+                                    {formatarMoeda(transacao.valor)}
+                                </span>
+                            </div>
+                        </div>
                     ))}
-                </select>
-
-                <button onClick={salvar}>
-                    Salvar
-                </button>
-            </div>
-
-            <hr />
-
-            <ul>
-                {transacoes.map((transacao) => (
-                    <li key={transacao.id}>
-                        {transacao.descricao} -
-                        {formatarMoeda(transacao.valor)} -
-                        {transacao.tipo === 1 ? "Receita" : "Despesa"}
-                    </li>
-                ))}
-            </ul>
-        </>
+                </div>
+            </section>
+        </div>
     );
 }

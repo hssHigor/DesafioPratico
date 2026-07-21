@@ -1,94 +1,96 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { buscarRelatorio } from "../../services/relatorioService";
 import type { RelatorioTotais } from "../../types/RelatorioTotais";
 
 import { formatarMoeda } from "../../utils/formatarMoeda";
 
-
 export function Relatorio() {
-    
     const [relatorio, setRelatorio] = useState<RelatorioTotais | null>(null);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
-    
-
 
     async function carregarRelatorio() {
-    try {
-        setCarregando(true);
-        setErro("");
-
-        const dados = await buscarRelatorio();
-
-        setRelatorio(dados);
-    } catch (error) {
-        console.error(error);
-        setErro("Não foi possível carregar o relatório.");
-    } finally {
-        setCarregando(false);
+        try {
+            setCarregando(true);
+            setErro("");
+            const dados = await buscarRelatorio();
+            setRelatorio(dados);
+        } catch (error) {
+            console.error(error);
+            setErro("Nao foi possivel carregar o relatorio.");
+        } finally {
+            setCarregando(false);
+        }
     }
-}
-
 
     useEffect(() => {
-        carregarRelatorio();
+        void carregarRelatorio();
     }, []);
 
     if (carregando) {
-        return <p>Carregando relatório...</p>;
-    }
-
-    if (erro) {
-        return <p>{erro}</p>;
+        return <div className="state-card">Carregando relatorio...</div>;
     }
 
     if (!relatorio) {
-        return <p>Nenhum relatório encontrado.</p>;
+        return <div className="state-card">Nenhum relatorio encontrado.</div>;
     }
 
     return (
-        <>
-            <h2>Relatório de Totais</h2>
+        <div className="page-section">
+            {erro && (
+                <div className="state-card">
+                    {erro}
+                </div>
+            )}
 
+            <section className="panel">
+                <div className="panel-header">
+                    <div>
+                        <p className="eyebrow">Resumo</p>
+                        <h2>Relatorio de totais</h2>
+                    </div>
+                </div>
 
-            <h3>Totais por pessoa</h3>
+                <div className="metric-grid">
+                    <div className="metric-card">
+                        <h4>Receitas</h4>
+                        <p className="metric-value">{formatarMoeda(relatorio.totalGeralReceitas)}</p>
+                    </div>
+                    <div className="metric-card">
+                        <h4>Despesas</h4>
+                        <p className="metric-value">{formatarMoeda(relatorio.totalGeralDespesas)}</p>
+                    </div>
+                    <div className="metric-card">
+                        <h4>Saldo geral</h4>
+                        <p className="metric-value">{formatarMoeda(relatorio.saldoGeral)}</p>
+                    </div>
+                </div>
+            </section>
 
-            <ul>
-                {relatorio.pessoas.map((pessoa) => (
-                    <li key={pessoa.pessoaId}>
-                        <strong>{pessoa.nome}</strong>
-                        <br />
+            <section className="panel">
+                <div className="panel-header">
+                    <h3>Totais por pessoa</h3>
+                </div>
 
-                        Receitas: {formatarMoeda(pessoa.totalReceitas)}
-                        <br />
+                <div className="card-list">
+                    {relatorio.pessoas.map((pessoa) => (
+                        <div key={pessoa.pessoaId} className="list-card">
+                            <div className="list-card-info">
+                                <div className="avatar">{pessoa.nome.charAt(0).toUpperCase()}</div>
+                                <div>
+                                    <strong>{pessoa.nome}</strong>
+                                    <p>Saldo: {formatarMoeda(pessoa.saldo)}</p>
+                                </div>
+                            </div>
 
-                        Despesas: {formatarMoeda(pessoa.totalDespesas)}
-                        <br />
-
-                        Saldo: {formatarMoeda(pessoa.saldo)}
-
-                        <hr />
-                    </li>
-                ))}
-            </ul>
-
-
-            <h3>Total Geral</h3>
-
-            <p>
-                Receitas:
-                {formatarMoeda(relatorio.totalGeralReceitas)}
-            </p>
-
-            <p>
-                Despesas:
-                {formatarMoeda(relatorio.totalGeralReceitas)}
-            </p>
-
-            <p>
-                Saldo:
-                {formatarMoeda(relatorio.saldoGeral)}
-            </p>
-        </>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "6px", alignItems: "flex-end" }}>
+                                <span className="tag tag-income">Receitas: {formatarMoeda(pessoa.totalReceitas)}</span>
+                                <span className="tag tag-expense">Despesas: {formatarMoeda(pessoa.totalDespesas)}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        </div>
     );
 }
