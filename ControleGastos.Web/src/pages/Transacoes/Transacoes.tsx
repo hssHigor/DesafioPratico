@@ -6,6 +6,8 @@ import type { Pessoa } from "../../types/Pessoa";
 import type { Transacao } from "../../types/Transacao";
 import type { TransacaoCreate } from "../../types/TransacaoCreate";
 
+import { formatarMoeda } from "../../utils/formatarMoeda";
+
 export function Transacoes() {
     const [pessoas, setPessoas] = useState<Pessoa[]>([]);
     const [transacoes, setTransacoes] = useState<Transacao[]>([]);
@@ -130,7 +132,7 @@ export function Transacoes() {
                 {transacoes.map((transacao) => (
                     <li key={transacao.id}>
                         {transacao.descricao} -
-                        R$ {transacao.valor} -
+                        {formatarMoeda(transacao.valor)} -
                         {transacao.tipo === 1 ? "Receita" : "Despesa"}
                     </li>
                 ))}

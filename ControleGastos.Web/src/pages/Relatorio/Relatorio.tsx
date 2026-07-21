@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { buscarRelatorio } from "../../services/relatorioService";
 import type { RelatorioTotais } from "../../types/RelatorioTotais";
 
+import { formatarMoeda } from "../../utils/formatarMoeda";
+
 
 export function Relatorio() {
     
@@ -57,13 +59,13 @@ export function Relatorio() {
                         <strong>{pessoa.nome}</strong>
                         <br />
 
-                        Receitas: R$ {pessoa.totalReceitas}
+                        Receitas: {formatarMoeda(pessoa.totalReceitas)}
                         <br />
 
-                        Despesas: R$ {pessoa.totalDespesas}
+                        Despesas: {formatarMoeda(pessoa.totalDespesas)}
                         <br />
 
-                        Saldo: R$ {pessoa.saldo}
+                        Saldo: {formatarMoeda(pessoa.saldo)}
 
                         <hr />
                     </li>
@@ -75,17 +77,17 @@ export function Relatorio() {
 
             <p>
                 Receitas:
-                R$ {relatorio.totalGeralReceitas}
+                {formatarMoeda(relatorio.totalGeralReceitas)}
             </p>
 
             <p>
                 Despesas:
-                R$ {relatorio.totalGeralDespesas}
+                {formatarMoeda(relatorio.totalGeralReceitas)}
             </p>
 
             <p>
                 Saldo:
-                R$ {relatorio.saldoGeral}
+                {formatarMoeda(relatorio.saldoGeral)}
             </p>
         </>
     );
