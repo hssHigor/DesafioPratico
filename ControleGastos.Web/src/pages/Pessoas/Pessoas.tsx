@@ -14,13 +14,26 @@ function Pessoas() {
   const [nome, setNome] = useState("");
   const [idade, setIdade] = useState("");
 
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
+
 
 
   async function carregarPessoas() {
-    const dados = await listarPessoas();
+    try {
+        setCarregando(true);
+        setErro("");
 
-    setPessoas(dados);
-  }
+        const dados = await listarPessoas();
+
+        setPessoas(dados);
+    } catch (error) {
+        console.error(error);
+        setErro("Não foi possível carregar as pessoas.");
+    } finally {
+        setCarregando(false);
+    }
+}
 
 
 
@@ -52,7 +65,13 @@ function Pessoas() {
     carregarPessoas();
   }
 
+  if (carregando) {
+    return <p>Carregando pessoas...</p>;
+  }
 
+  if (erro) {
+    return <p>{erro}</p>;
+  }
 
   return (
     <div>

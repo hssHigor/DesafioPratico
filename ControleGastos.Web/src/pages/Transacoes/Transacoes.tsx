@@ -15,12 +15,25 @@ export function Transacoes() {
     const [tipo, setTipo] = useState(1);
     const [pessoaId, setPessoaId] = useState(0);
 
+    const [carregando, setCarregando] = useState(true);
+    const [erro, setErro] = useState("");
+
     async function carregarDados() {
+    try {
+        setCarregando(true);
+        setErro("");
+
         const pessoasApi = await listarPessoas();
         const transacoesApi = await listarTransacoes();
 
         setPessoas(pessoasApi);
         setTransacoes(transacoesApi);
+    } catch (error) {
+        console.error(error);
+        setErro("Não foi possível carregar os dados.");
+    } finally {
+        setCarregando(false);
+    }
     }
 
     useEffect(() => {
@@ -35,14 +48,27 @@ export function Transacoes() {
             pessoaId
         };
 
-        await criarTransacao(novaTransacao);
+        try {
+            await criarTransacao(novaTransacao);
 
-        setDescricao("");
-        setValor("");
-        setTipo(1);
-        setPessoaId(0);
+            setDescricao("");
+            setValor("");
+            setTipo(1);
+            setPessoaId(0);
 
-        carregarDados();
+            carregarDados();
+        } catch (error) {
+            console.error(error);
+            alert("Não foi possível cadastrar a transação.");
+        }
+    }
+
+    if (carregando) {
+        return <p>Carregando transações...</p>;
+    }
+
+    if (erro) {
+        return <p>{erro}</p>;
     }
 
     return (

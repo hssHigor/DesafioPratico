@@ -1,31 +1,48 @@
 import { useEffect, useState } from "react";
-
 import { buscarRelatorio } from "../../services/relatorioService";
-
 import type { RelatorioTotais } from "../../types/RelatorioTotais";
 
 
 export function Relatorio() {
-
+    
     const [relatorio, setRelatorio] = useState<RelatorioTotais | null>(null);
+    const [carregando, setCarregando] = useState(true);
+    const [erro, setErro] = useState("");
+    
 
 
     async function carregarRelatorio() {
+    try {
+        setCarregando(true);
+        setErro("");
+
         const dados = await buscarRelatorio();
 
         setRelatorio(dados);
+    } catch (error) {
+        console.error(error);
+        setErro("Não foi possível carregar o relatório.");
+    } finally {
+        setCarregando(false);
     }
+}
 
 
     useEffect(() => {
         carregarRelatorio();
     }, []);
 
-
-    if (!relatorio) {
+    if (carregando) {
         return <p>Carregando relatório...</p>;
     }
 
+    if (erro) {
+        return <p>{erro}</p>;
+    }
+
+    if (!relatorio) {
+        return <p>Nenhum relatório encontrado.</p>;
+    }
 
     return (
         <>
